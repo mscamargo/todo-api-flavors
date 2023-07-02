@@ -1,7 +1,25 @@
-import { describe, it } from 'node:test'
+import assert from 'node:assert/strict'
+import { once } from 'node:events'
+import { describe, it, before, after } from 'node:test'
+import { server } from '../nodejs-vanilla/src/main.js'
+
+const PORT = 3000
 
 describe('[POST] /todo', () => {
-  it.todo('should create a to-do item correctly')
+  before(async () => {
+    server.listen(PORT)
+    await once(server, 'listening')
+  })
+  after((done) => {
+    server.close(done)
+  })
+
+  it('should create a to-do item correctly', async () => {
+    const response = await fetch(`http://localhost:${PORT}/todo`, {
+      method: 'POST'
+    })
+    assert.equal(response.status, 201)
+  })
   it.todo('should return a validation error for an invalid a to-do item')
 })
 
