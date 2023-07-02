@@ -1,13 +1,13 @@
 import assert from 'node:assert/strict'
-import { once } from 'node:events'
 import { describe, it, before, after } from 'node:test'
-import { server } from '../nodejs-vanilla/src/main.js'
+import { once } from 'node:events'
 
 const PORT = 3000
 
 describe('[POST] /todo', () => {
+  let server
   before(async () => {
-    server.listen(PORT)
+    server = (await import('../nodejs-vanilla/src/main.js')).server
     await once(server, 'listening')
   })
   after((done) => {
